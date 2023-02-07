@@ -19,6 +19,15 @@ pipeline {
        sh 'cat trufflehog'
      }
    }
+    stage ('Source Composition Analysis') {
+      steps {
+        sh 'rm owasp* || true'
+        sh 'wget "https://github.com/celdso/devsec/blob/master/owasp_dependency_check.sh"'
+        sh 'chmod +x owasp_dependency_check.sh'
+        sh 'bash owasp_dependency_check.sh'
+        sh 'cat /var/lib/jenkins/OWASP-Dependency-Check/reports/dependency-check-report.xml'
+      }
+    }
     stage ('Build') {
       steps {
       sh 'mvn clean package'
